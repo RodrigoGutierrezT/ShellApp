@@ -12,7 +12,10 @@ import UniformTypeIdentifiers
 
 class ActionViewController: UIViewController {
 
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var script: UITextView!
+    
+    var pageTitle = ""
+    var pageURL = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
