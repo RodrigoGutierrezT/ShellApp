@@ -20,6 +20,8 @@ class ActionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        
         if let inputItem = extensionContext?.inputItems.first as? NSExtensionItem {
                 if let itemProvider = inputItem.attachments?.first {
                     itemProvider.loadItem(forTypeIdentifier: UTType.propertyList.identifier as String) { [weak self] (dict, error) in
@@ -41,9 +43,18 @@ class ActionViewController: UIViewController {
     }
 
     @IBAction func done() {
-        // Return any edited content to the host app.
-        // This template doesn't do anything, so we just echo the passed in items.
-        self.extensionContext!.completeRequest(returningItems: self.extensionContext!.inputItems, completionHandler: nil)
+        // object to hold the items
+        let item = NSExtensionItem()
+        // set argument from script.text
+        let argument: NSDictionary = ["customJavaScript": script.text ?? ""]
+        // insert it in the fnalize dictionary
+        let webDictionary: NSDictionary = [NSExtensionJavaScriptFinalizeArgumentKey: argument]
+        
+        let customJavaScript = NSItemProvider(item: webDictionary, typeIdentifier: UTType.propertyList.identifier as String)
+            item.attachments = [customJavaScript]
+        
+        // return items to previous window
+        extensionContext?.completeRequest(returningItems: [item])
     }
 
 }
