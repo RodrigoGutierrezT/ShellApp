@@ -28,7 +28,13 @@ class ActionViewController: UIViewController {
                         
                         guard let javaScriptValues = itemDictionary[NSExtensionJavaScriptPreprocessingResultsKey] as? NSDictionary else { return}
                         
-                        print(javaScriptValues)
+                        self?.pageTitle = javaScriptValues["title"] as? String ?? ""
+                        self?.pageURL = javaScriptValues["URL"] as? String ?? ""
+                        
+                        // update UI in main thread
+                        DispatchQueue.main.async {
+                            self?.title = self?.pageTitle
+                        }
                     }
                 }
             }
